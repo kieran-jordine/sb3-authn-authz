@@ -20,4 +20,9 @@ public class HomeController {
         return "User: " + principal.getName();
     }
 
+    @GetMapping("/admin")
+    public String admin(Principal principal) {
+        return "Admin: " + principal.getName();
+    }
+
 }

@@ -37,7 +37,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+//                .authenticateduthorizeHttpRequests(auth -> {
+//                    auth.requestMatchers("/api/v1").permitAll();
+//                    auth.requestMatchers("/api/v1/user").hasAuthority("USER");
+//                    auth.requestMatchers("/api/v1/admin").hasAuthority("ADMIN");
+//                })
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults()) // shows login alert-box (not form login)
@@ -61,7 +66,17 @@ public class SecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        final UserDetails user = User.withUsername("user").password("{noop}password").authorities("USER").build();
+        final UserDetails user = User
+                .withUsername("user")
+                .password("{noop}password")
+                .authorities("USER")
+                .build();
+//        final UserDetails admin = User
+//                .withUsername("admin")
+//                .password("{noop}password")
+//                .authorities("ADMIN")
+//                .build();
         return new InMemoryUserDetailsManager(user);
     }
+
 }
